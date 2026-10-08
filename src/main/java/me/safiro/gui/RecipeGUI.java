@@ -59,26 +59,13 @@ public class RecipeGUI {
     public static void openRecipePage(Player player, String itemId) {
         Inventory inv = Bukkit.createInventory(null, 54, "§8Recipe: " + plugin.getMagicItemManager().getItemDisplayName(itemId));
 
-        int[] gridSlots = {10, 11, 12, 19, 20, 21, 28, 29, 30};
-        for (int slot : gridSlots) {
-            ItemStack empty = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-            ItemMeta emptyMeta = empty.getItemMeta();
-            if (emptyMeta != null) {
-                emptyMeta.setDisplayName(" ");
-                empty.setItemMeta(emptyMeta);
-            }
-            inv.setItem(slot, empty);
-        }
-
         ItemStack result = plugin.getMagicItemManager().createItem(itemId, 1);
         inv.setItem(22, result);
 
         List<Material> ingredients = plugin.getRecipeManager().getRecipeIngredients(itemId);
-        int gridIndex = 0;
+        int index = 0;
         for (Material material : ingredients) {
-            if (gridIndex >= 9) break;
             if (material == Material.AIR) {
-                gridIndex++;
                 continue;
             }
             ItemStack ingredient = new ItemStack(material);
@@ -87,8 +74,8 @@ public class RecipeGUI {
                 meta.setDisplayName(material.name().replace("_", " "));
                 ingredient.setItemMeta(meta);
             }
-            inv.setItem(gridSlots[gridIndex], ingredient);
-            gridIndex++;
+            inv.setItem(11 + index, ingredient);
+            index++;
         }
 
         ItemStack info = new ItemStack(Material.PAPER);
