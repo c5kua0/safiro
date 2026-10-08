@@ -1,7 +1,6 @@
 package me.safiro.manager;
 
 import me.safiro.Safiro;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.*;
@@ -53,6 +52,7 @@ public class SafiroManager {
 
     public void givePoints(Player player, int amount) {
         plugin.getPlayerDataManager().addPoints(player.getUniqueId(), amount);
+        player.sendMessage("§b+" + amount + " Safiro Points§r (Total: " + plugin.getPlayerDataManager().getPoints(player.getUniqueId()) + ")");
     }
 
     public void applyRewardIfAllowed(Player player, String rewardKey) {

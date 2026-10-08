@@ -47,15 +47,17 @@ public class UpgradeGUI {
             }
             inv.setItem(slot, item);
             slot++;
-            if (slot >= 54) {
+            if (slot >= 53) {
                 break;
             }
         }
 
+        // Back Button
         ItemStack back = new ItemStack(Material.ARROW);
         ItemMeta backMeta = back.getItemMeta();
         if (backMeta != null) {
             backMeta.setDisplayName("§7Back");
+            backMeta.getPersistentDataContainer().set(new NamespacedKey(plugin, "gui_action"), PersistentDataType.STRING, "back");
             back.setItemMeta(backMeta);
         }
         inv.setItem(53, back);

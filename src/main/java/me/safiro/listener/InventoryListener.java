@@ -36,7 +36,7 @@ public class InventoryListener implements Listener {
 
         Inventory inv = event.getInventory();
         String title = event.getView().getTitle();
-        if (title.equals("§8Safiro System") || title.equals("§8Safiro Crafting") || title.equals("§8Safiro Recipe Guide") || title.equals("§8Safiro Upgrades") || title.equals("§8Safiro Slots")) {
+        if (title.equals("§8Safiro System") || title.equals("§8Safiro Crafting") || title.equals("§8Safiro Recipe Guide") || title.equals("§8Safiro Upgrades") || title.equals("§8Safiro Slots") || title.startsWith("§8Recipe:")) {
             event.setCancelled(true);
         }
 
@@ -74,7 +74,50 @@ public class InventoryListener implements Listener {
                 return;
             }
             String action = meta.getPersistentDataContainer().get(new NamespacedKey(plugin, "gui_action"), PersistentDataType.STRING);
-            if (action != null && action.startsWith("craft:")) {
+            if (action == null) {
+                return;
+            }
+            if (action.startsWith("craft:")) {
+                String id = action.substring("craft:".length());
+                plugin.getRecipeManager().craft(player, id);
+            } else if (action.equals("back")) {
+                MainGUI.open(player);
+            }
+        }
+
+        if (title.equals("§8Safiro Recipe Guide")) {
+            ItemStack item = event.getCurrentItem();
+            if (item == null || item.getType() == Material.AIR) {
+                return;
+            }
+            ItemMeta meta = item.getItemMeta();
+            if (meta == null) {
+                return;
+            }
+            String action = meta.getPersistentDataContainer().get(new NamespacedKey(plugin, "gui_action"), PersistentDataType.STRING);
+            if (action != null && action.equals("back")) {
+                MainGUI.open(player);
+            } else {
+                String recipeId = meta.getPersistentDataContainer().get(new NamespacedKey(plugin, "recipe_item_id"), PersistentDataType.STRING);
+                if (recipeId != null) {
+                    RecipeGUI.openRecipePage(player, recipeId);
+                }
+            }
+        }
+
+        if (title.startsWith("§8Recipe:")) {
+            ItemStack item = event.getCurrentItem();
+            if (item == null || item.getType() == Material.AIR) {
+                return;
+            }
+            ItemMeta meta = item.getItemMeta();
+            if (meta == null) {
+                return;
+            }
+            String action = meta.getPersistentDataContainer().get(new NamespacedKey(plugin, "gui_action"), PersistentDataType.STRING);
+            if (action != null && action.equals("back_recipe")) {
+                RecipeGUI.open(player);
+            } else if (action != null && action.startsWith("craft:")) {
                 String id = action.substring("craft:".length());
                 plugin.getRecipeManager().craft(player, id);
             }
@@ -89,9 +132,14 @@ public class InventoryListener implements Listener {
             if (meta == null) {
                 return;
             }
-            String itemId = meta.getPersistentDataContainer().get(new NamespacedKey(plugin, "upgrade_item_id"), PersistentDataType.STRING);
-            if (itemId != null) {
-                plugin.getUpgradeManager().upgrade(player, itemId);
+            String action = meta.getPersistentDataContainer().get(new NamespacedKey(plugin, "gui_action"), PersistentDataType.STRING);
+            if (action != null && action.equals("back")) {
+                MainGUI.open(player);
+            } else {
+                String itemId = meta.getPersistentDataContainer().get(new NamespacedKey(plugin, "upgrade_item_id"), PersistentDataType.STRING);
+                if (itemId != null) {
+                    plugin.getUpgradeManager().upgrade(player, itemId);
+                }
             }
         }
 
@@ -104,19 +152,25 @@ public class InventoryListener implements Listener {
             if (meta == null) {
                 return;
             }
-            Integer slot = meta.getPersistentDataContainer().get(new NamespacedKey(plugin, "slot_index"), PersistentDataType.INTEGER);
-            if (slot != null) {
-                int unlocked = plugin.getPlayerDataManager().getUnlockedSlots(player.getUniqueId());
-                if (slot <= unlocked) {
-                    player.sendMessage("§aSlot " + slot + " is unlocked.");
-                } else {
-                    int cost = plugin.getSafiroManager().getSlotCost(slot);
-                    if (plugin.getSafiroManager().hasEnoughPoints(player, cost)) {
-                        plugin.getSafiroManager().takePoints(player, cost);
-                        plugin.getPlayerDataManager().setUnlockedSlots(player.getUniqueId(), slot);
-                        player.sendMessage("§aUnlocked slot " + slot + ".");
+            String action = meta.getPersistentDataContainer().get(new NamespacedKey(plugin, "gui_action"), PersistentDataType.STRING);
+            if (action != null && action.equals("back")) {
+                MainGUI.open(player);
+            } else {
+                Integer slot = meta.getPersistentDataContainer().get(new NamespacedKey(plugin, "slot_index"), PersistentDataType.INTEGER);
+                if (slot != null) {
+                    int unlocked = plugin.getPlayerDataManager().getUnlockedSlots(player.getUniqueId());
+                    if (slot <= unlocked) {
+                        player.sendMessage("§aSlot " + slot + " is unlocked.");
                     } else {
-                        player.sendMessage(plugin.getConfig().getString("messages.no-points", "You don't have enough Safiro Points."));
+                        int cost = plugin.getSafiroManager().getSlotCost(slot);
+                        if (plugin.getSafiroManager().hasEnoughPoints(player, cost)) {
+                            plugin.getSafiroManager().takePoints(player, cost);
+                            plugin.getPlayerDataManager().setUnlockedSlots(player.getUniqueId(), slot);
+                            player.sendMessage("§aUnlocked slot " + slot + ".");
+                            SlotGUI.open(player);
+                        } else {
+                            player.sendMessage(plugin.getConfig().getString("messages.no-points", "You don't have enough Safiro Points."));
+                        }
                     }
                 }
             }
@@ -125,7 +179,7 @@ public class InventoryListener implements Listener {
 
     @EventHandler
     public void onInventoryDrag(InventoryDragEvent event) {
-        if (event.getView().getTitle().equals("§8Safiro System") || event.getView().getTitle().equals("§8Safiro Crafting") || event.getView().getTitle().equals("§8Safiro Recipe Guide") || event.getView().getTitle().equals("§8Safiro Upgrades") || event.getView().getTitle().equals("§8Safiro Slots")) {
+        if (event.getView().getTitle().equals("§8Safiro System") || event.getView().getTitle().equals("§8Safiro Crafting") || event.getView().getTitle().equals("§8Safiro Recipe Guide") || event.getView().getTitle().equals("§8Safiro Upgrades") || event.getView().getTitle().equals("§8Safiro Slots") || event.getView().getTitle().startsWith("§8Recipe:")) {
             event.setCancelled(true);
         }
     }
@@ -133,8 +187,8 @@ public class InventoryListener implements Listener {
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         String title = event.getView().getTitle();
-        if (title.equals("§8Safiro Crafting") || title.equals("§8Safiro Upgrades") || title.equals("§8Safiro Slots") || title.equals("§8Safiro Recipe Guide") || title.equals("§8Safiro System")) {
-            // Custom GUI close handling is intentionally safe and leaves legitimate inventory changes alone.
+        if (title.equals("§8Safiro Crafting") || title.equals("§8Safiro Upgrades") || title.equals("§8Safiro Slots") || title.equals("§8Safiro Recipe Guide") || title.equals("§8Safiro System") || title.startsWith("§8Recipe:")) {
+            // Custom GUI close handling
         }
     }
 

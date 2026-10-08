@@ -1,13 +1,11 @@
 package me.safiro.gui;
 
 import me.safiro.Safiro;
-import me.safiro.manager.MagicItemManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
@@ -26,13 +24,16 @@ public class CraftingGUI {
 
     public static void open(Player player, String itemId) {
         Inventory inv = Bukkit.createInventory(null, 54, TITLE);
-        ItemStack result = plugin.getMagicItemManager().createItem(itemId, plugin.getPlayerDataManager().getLevel(player.getUniqueId(), itemId));
-        inv.setItem(22, result);
-
+        
+        // 3x3 Recipe Grid (slots 10-12, 19-21, 28-30)
         List<Material> ingredients = plugin.getRecipeManager().getRecipeIngredients(itemId);
-        int index = 0;
+        int gridIndex = 0;
+        int[] gridSlots = {10, 11, 12, 19, 20, 21, 28, 29, 30};
+        
         for (Material material : ingredients) {
+            if (gridIndex >= 9) break; // Max 9 slots in 3x3
             if (material == Material.AIR) {
+                gridIndex++;
                 continue;
             }
             ItemStack ingredient = new ItemStack(material);
@@ -41,10 +42,15 @@ public class CraftingGUI {
                 meta.setDisplayName(material.name().replace("_", " "));
                 ingredient.setItemMeta(meta);
             }
-            inv.setItem(11 + index, ingredient);
-            index++;
+            inv.setItem(gridSlots[gridIndex], ingredient);
+            gridIndex++;
         }
 
+        // Result slot (center-right of grid)
+        ItemStack result = plugin.getMagicItemManager().createItem(itemId, plugin.getPlayerDataManager().getLevel(player.getUniqueId(), itemId));
+        inv.setItem(22, result);
+
+        // Craft Button
         ItemStack craftButton = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
         ItemMeta meta = craftButton.getItemMeta();
         if (meta != null) {
@@ -54,6 +60,7 @@ public class CraftingGUI {
         }
         inv.setItem(49, craftButton);
 
+        // Info
         ItemStack info = new ItemStack(Material.PAPER);
         ItemMeta infoMeta = info.getItemMeta();
         if (infoMeta != null) {
@@ -65,6 +72,16 @@ public class CraftingGUI {
             info.setItemMeta(infoMeta);
         }
         inv.setItem(40, info);
+
+        // Back Button
+        ItemStack back = new ItemStack(Material.ARROW);
+        ItemMeta backMeta = back.getItemMeta();
+        if (backMeta != null) {
+            backMeta.setDisplayName("§7Back");
+            backMeta.getPersistentDataContainer().set(new NamespacedKey(plugin, "gui_action"), PersistentDataType.STRING, "back");
+            back.setItemMeta(backMeta);
+        }
+        inv.setItem(53, back);
 
         player.openInventory(inv);
     }
