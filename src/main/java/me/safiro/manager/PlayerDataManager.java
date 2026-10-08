@@ -95,11 +95,13 @@ public class PlayerDataManager {
 
     public Map<Integer, String> getEquipped(UUID uuid) {
         Map<Integer, String> result = new HashMap<>();
-        for (String key : getPlayerData(uuid).getConfigurationSection("equipped") == null ? java.util.Collections.emptyList() : getPlayerData(uuid).getConfigurationSection("equipped").getKeys(false)) {
-            int slot = Integer.parseInt(key);
-            String value = getPlayerData(uuid).getString("equipped." + key, "");
-            if (!value.isEmpty()) {
-                result.put(slot, value);
+        if (getPlayerData(uuid).getConfigurationSection("equipped") != null) {
+            for (String key : getPlayerData(uuid).getConfigurationSection("equipped").getKeys(false)) {
+                int slot = Integer.parseInt(key);
+                String value = getPlayerData(uuid).getString("equipped." + key, "");
+                if (!value.isEmpty()) {
+                    result.put(slot, value);
+                }
             }
         }
         return result;
