@@ -44,7 +44,6 @@ public class RecipeGUI {
                 break;
             }
         }
-
         ItemStack back = new ItemStack(Material.ARROW);
         ItemMeta backMeta = back.getItemMeta();
         if (backMeta != null) {
@@ -58,10 +57,8 @@ public class RecipeGUI {
 
     public static void openRecipePage(Player player, String itemId) {
         Inventory inv = Bukkit.createInventory(null, 54, "§8Recipe: " + plugin.getMagicItemManager().getItemDisplayName(itemId));
-
         ItemStack result = plugin.getMagicItemManager().createItem(itemId, 1);
         inv.setItem(22, result);
-
         List<Material> ingredients = plugin.getRecipeManager().getRecipeIngredients(itemId);
         int index = 0;
         for (Material material : ingredients) {
@@ -77,7 +74,6 @@ public class RecipeGUI {
             inv.setItem(11 + index, ingredient);
             index++;
         }
-
         ItemStack info = new ItemStack(Material.PAPER);
         ItemMeta infoMeta = info.getItemMeta();
         if (infoMeta != null) {
@@ -90,7 +86,6 @@ public class RecipeGUI {
             info.setItemMeta(infoMeta);
         }
         inv.setItem(40, info);
-
         ItemStack craftButton = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
         ItemMeta craftMeta = craftButton.getItemMeta();
         if (craftMeta != null) {
@@ -99,7 +94,6 @@ public class RecipeGUI {
             craftButton.setItemMeta(craftMeta);
         }
         inv.setItem(49, craftButton);
-
         ItemStack back = new ItemStack(Material.ARROW);
         ItemMeta backMeta = back.getItemMeta();
         if (backMeta != null) {
@@ -108,7 +102,6 @@ public class RecipeGUI {
             back.setItemMeta(backMeta);
         }
         inv.setItem(53, back);
-
         player.openInventory(inv);
     }
 }
