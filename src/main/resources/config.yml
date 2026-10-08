@@ -1,0 +1,110 @@
+# Safiro default configuration
+messages:
+  no-materials: "You don't have the required materials."
+  no-points: "You don't have enough Safiro Points."
+  reload-success-console: "[Safiro] Configuration reloaded successfully."
+  reload-success-player: "§bSafiro configuration reloaded successfully."
+  no-wing: "You need God Wings equipped to use this command."
+  points-header: "§bSafiro Points"
+
+points:
+  rewards:
+    hostile-mob: 1
+    boss: 25
+    achievement: 10
+    villager-trade: 2
+    rare-ore: 2
+    structure-discovery: 5
+    quest-min: 10
+    quest-max: 25
+  cooldowns:
+    hostile-mob: 6000
+    boss: 180000
+    achievement: 120000
+    villager-trade: 60000
+    rare-ore: 60000
+    structure-discovery: 120000
+    quest: 180000
+
+slots:
+  default: 1
+  maximum: 3
+  costs:
+    2: 100
+    3: 250
+
+crafting:
+  costs:
+    fireball: 25
+    lifebloom: 30
+    rabbit_leg: 25
+    has_claw: 50
+    daisy: 40
+
+upgrades:
+  default-costs:
+    1: 25
+    2: 50
+    3: 100
+    4: 200
+  costs:
+    fireball:
+      1: 25
+      2: 50
+      3: 100
+      4: 200
+    lifebloom:
+      1: 25
+      2: 50
+      3: 100
+      4: 200
+    rabbit_leg:
+      1: 25
+      2: 50
+      3: 100
+      4: 200
+    has_claw:
+      1: 25
+      2: 50
+      3: 100
+      4: 200
+    daisy:
+      1: 25
+      2: 50
+      3: 100
+      4: 200
+
+magic:
+  fireball:
+    damage: 5.0
+    cooldown: 2.0
+    projectile-speed: 1.4
+    explosion-power: 1.2
+  lifebloom:
+    amplifier: 1
+    duration: 120
+    tick-interval: 20
+  rabbit_leg:
+    amplifier: 1
+    duration: 120
+  has_claw:
+    percent: 0.05
+  daisy:
+    health-threshold: 25
+    absorption-amount: 4
+    duration: 80
+    cooldown: 20
+  chad:
+    max-logs: 200
+  god-wings:
+    flight-duration: 0
+
+recipe-guide:
+  show-secret: false
+
+ui:
+  title-main: "§8Safiro System"
+  title-crafting: "§8Safiro Crafting"
+  title-recipe: "§8Safiro Recipe Guide"
+  title-upgrade: "§8Safiro Upgrades"
+  title-slots: "§8Safiro Slots"

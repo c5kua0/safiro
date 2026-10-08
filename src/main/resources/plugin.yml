@@ -1,0 +1,17 @@
+name: Safiro
+main: me.safiro.Safiro
+version: 1.0.0
+api-version: '1.21'
+
+commands:
+  safiro:
+    description: Opens the Safiro GUI and system commands.
+    usage: /safiro [points|reload]
+  wing:
+    description: Toggles flight when God Wings are equipped.
+    usage: /wing
+
+permissions:
+  safiro.admin:
+    description: Allows admin-only Safiro commands.
+    default: op
