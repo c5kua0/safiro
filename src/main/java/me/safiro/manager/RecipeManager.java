@@ -25,7 +25,7 @@ public class RecipeManager {
         RECIPE_MAP.put("has_claw", List.of(Material.PHANTOM_MEMBRANE, Material.FERMENTED_SPIDER_EYE, Material.PHANTOM_MEMBRANE, Material.NETHERITE_SCRAP));
         RECIPE_MAP.put("daisy", List.of(Material.OXEYE_DAISY, Material.GOLDEN_APPLE, Material.OXEYE_DAISY, Material.AMETHYST_SHARD));
         RECIPE_MAP.put("chad", List.of(Material.DIAMOND_AXE, Material.GOLDEN_APPLE, Material.DIAMOND_AXE, Material.DIAMOND, Material.EMERALD, Material.STICK, Material.ECHO_SHARD));
-        RECIPE_MAP.put("god_wings", List.of(Material.PHANTOM_MEMBRANE, Material.DIAMOND, Material.PHANTOM_MEMBRANE, Material.FEATHER, Material.GOLD, Material.FEATHER, Material.PHANTOM_MEMBRANE, Material.DIAMOND, Material.PHANTOM_MEMBRANE));
+        RECIPE_MAP.put("god_wings", List.of(Material.PHANTOM_MEMBRANE, Material.DIAMOND, Material.PHANTOM_MEMBRANE, Material.FEATHER, Material.GOLD_BLOCK, Material.FEATHER, Material.PHANTOM_MEMBRANE, Material.DIAMOND));
     }
 
     public List<Material> getRecipeIngredients(String itemId) {
