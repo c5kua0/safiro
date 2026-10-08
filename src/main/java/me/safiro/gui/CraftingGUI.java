@@ -25,26 +25,10 @@ public class CraftingGUI {
     public static void open(Player player, String itemId) {
         Inventory inv = Bukkit.createInventory(null, 54, TITLE);
 
-        // Fill empty recipe slots with grey stained glass
-        int[] gridSlots = {10, 11, 12, 19, 20, 21, 28, 29, 30};
-        for (int slot : gridSlots) {
-            ItemStack empty = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
-            ItemMeta emptyMeta = empty.getItemMeta();
-            if (emptyMeta != null) {
-                emptyMeta.setDisplayName(" ");
-                empty.setItemMeta(emptyMeta);
-            }
-            inv.setItem(slot, empty);
-        }
-
-        // 3x3 Recipe Grid (slots 10-12, 19-21, 28-30)
         List<Material> ingredients = plugin.getRecipeManager().getRecipeIngredients(itemId);
-        int gridIndex = 0;
-
+        int index = 0;
         for (Material material : ingredients) {
-            if (gridIndex >= 9) break;
             if (material == Material.AIR) {
-                gridIndex++;
                 continue;
             }
             ItemStack ingredient = new ItemStack(material);
@@ -53,15 +37,13 @@ public class CraftingGUI {
                 meta.setDisplayName(material.name().replace("_", " "));
                 ingredient.setItemMeta(meta);
             }
-            inv.setItem(gridSlots[gridIndex], ingredient);
-            gridIndex++;
+            inv.setItem(11 + index, ingredient);
+            index++;
         }
 
-        // Result slot (center-right of grid)
         ItemStack result = plugin.getMagicItemManager().createItem(itemId, plugin.getPlayerDataManager().getLevel(player.getUniqueId(), itemId));
         inv.setItem(22, result);
 
-        // Craft Button
         ItemStack craftButton = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
         ItemMeta meta = craftButton.getItemMeta();
         if (meta != null) {
@@ -71,7 +53,6 @@ public class CraftingGUI {
         }
         inv.setItem(49, craftButton);
 
-        // Info
         ItemStack info = new ItemStack(Material.PAPER);
         ItemMeta infoMeta = info.getItemMeta();
         if (infoMeta != null) {
@@ -84,7 +65,6 @@ public class CraftingGUI {
         }
         inv.setItem(40, info);
 
-        // Back Button
         ItemStack back = new ItemStack(Material.ARROW);
         ItemMeta backMeta = back.getItemMeta();
         if (backMeta != null) {
