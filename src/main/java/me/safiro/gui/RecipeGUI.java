@@ -59,15 +59,22 @@ public class RecipeGUI {
     public static void openRecipePage(Player player, String itemId) {
         Inventory inv = Bukkit.createInventory(null, 54, "§8Recipe: " + plugin.getMagicItemManager().getItemDisplayName(itemId));
 
-        // Display result
+        int[] gridSlots = {10, 11, 12, 19, 20, 21, 28, 29, 30};
+        for (int slot : gridSlots) {
+            ItemStack empty = new ItemStack(Material.GRAY_STAINED_GLASS_PANE);
+            ItemMeta emptyMeta = empty.getItemMeta();
+            if (emptyMeta != null) {
+                emptyMeta.setDisplayName(" ");
+                empty.setItemMeta(emptyMeta);
+            }
+            inv.setItem(slot, empty);
+        }
+
         ItemStack result = plugin.getMagicItemManager().createItem(itemId, 1);
         inv.setItem(22, result);
 
-        // Display ingredients in 3x3 grid
         List<Material> ingredients = plugin.getRecipeManager().getRecipeIngredients(itemId);
         int gridIndex = 0;
-        int[] gridSlots = {10, 11, 12, 19, 20, 21, 28, 29, 30};
-
         for (Material material : ingredients) {
             if (gridIndex >= 9) break;
             if (material == Material.AIR) {
@@ -84,7 +91,6 @@ public class RecipeGUI {
             gridIndex++;
         }
 
-        // Info
         ItemStack info = new ItemStack(Material.PAPER);
         ItemMeta infoMeta = info.getItemMeta();
         if (infoMeta != null) {
@@ -98,7 +104,6 @@ public class RecipeGUI {
         }
         inv.setItem(40, info);
 
-        // Craft Button
         ItemStack craftButton = new ItemStack(Material.LIME_STAINED_GLASS_PANE);
         ItemMeta craftMeta = craftButton.getItemMeta();
         if (craftMeta != null) {
@@ -108,7 +113,6 @@ public class RecipeGUI {
         }
         inv.setItem(49, craftButton);
 
-        // Back Button
         ItemStack back = new ItemStack(Material.ARROW);
         ItemMeta backMeta = back.getItemMeta();
         if (backMeta != null) {
